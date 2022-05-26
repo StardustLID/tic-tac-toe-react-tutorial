@@ -6,13 +6,13 @@ import './index.css';
 // 1. Display the location for each move in the format (col, row) in the move history list.
 // 2. Bold the currently selected item in the move list.
 // 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
-// 5. When someone wins, highlight the three squares that caused the win.
 
 function Square(props) {
   return (
     <button
       className="square"
       onClick={props.onClick}
+      style = {{'background': props.isWinningLine ? '#0f0' : '#fff'}}
     >
       {props.value}
     </button>
@@ -24,6 +24,8 @@ class Board extends React.Component {
     return (
       <Square
         value={this.props.squares[i]}
+        // highlight the three squares that caused the win
+        isWinningLine={this.props.winningLine && this.props.winningLine.includes(i)}
         onClick={() => this.props.onClick(i)}
       />
     );
@@ -59,7 +61,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares)[0] || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
@@ -82,9 +84,9 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const [winner, winningLine] = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
+    const moves = history.map((_, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
@@ -94,7 +96,6 @@ class Game extends React.Component {
         </li>
       );
     });
-// 6. When no one wins, display a message about the result being a draw.
 
     let status;
     if (winner) {
@@ -110,6 +111,7 @@ class Game extends React.Component {
         <div className="game-board">
           <Board
             squares={current.squares}
+            winningLine={winningLine}
             onClick={(i) => this.handleClick(i)}
           />
         </div>
@@ -141,8 +143,8 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [squares[a], lines[i]];
     }
   }
-  return null;
+  return [null, null];
 }
