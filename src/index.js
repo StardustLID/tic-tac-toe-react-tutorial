@@ -2,9 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-// TODO:
-// 2. Bold the currently selected item in the move list.
-
 function Square(props) {
   return (
     <button
@@ -54,6 +51,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      jumping: null,
       ascendingMoves: true,
     };
   }
@@ -75,7 +73,8 @@ class Game extends React.Component {
         row: row,
       }]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
+      xIsNext: !this.state.xIsNext,
+      jumping: null,
     });
   }
 
@@ -83,6 +82,7 @@ class Game extends React.Component {
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
+      jumping: step,
     });
   }
 
@@ -96,7 +96,7 @@ class Game extends React.Component {
         'Go to move #' + move :
         'Go to game start';
       return (
-        <li key={move}>
+        <li key={move} style={{fontWeight: move === this.state.jumping ? 'bold' : 'normal'}}>
           ({step.col}, {step.row})
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
