@@ -4,7 +4,6 @@ import './index.css';
 
 // TODO:
 // 2. Bold the currently selected item in the move list.
-// 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 
 function Square(props) {
   return (
@@ -55,6 +54,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      ascendingMoves: true,
     };
   }
 
@@ -123,7 +123,10 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <button onClick={() => this.setState({ascendingMoves: !this.state.ascendingMoves})}>
+            ascending/descending
+          </button>
+          <ol>{this.state.ascendingMoves ? moves : moves.reverse()}</ol>
         </div>
       </div>
     );
