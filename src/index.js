@@ -2,14 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
+// TODO:
+// 1. Display the location for each move in the format (col, row) in the move history list.
+// 2. Bold the currently selected item in the move list.
+// 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
+// 5. When someone wins, highlight the three squares that caused the win.
+// 6. When no one wins, display a message about the result being a draw.
+
 function Square(props) {
   return (
     <button
-          className="square"
-          onClick={props.onClick}
-      >
-        {props.value}
-      </button>
+      className="square"
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
   );
 }
 
@@ -24,23 +31,14 @@ class Board extends React.Component {
   }
 
   render() {
+    const idx = [...Array(3).keys()];
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {idx.map(i => (
+          <div className="board-row">
+            {idx.map(j => this.renderSquare(i*3 + j))}
+          </div>)
+        )}
       </div>
     );
   }
