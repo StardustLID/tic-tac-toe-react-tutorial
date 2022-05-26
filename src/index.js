@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 
 // TODO:
-// 1. Display the location for each move in the format (col, row) in the move history list.
 // 2. Bold the currently selected item in the move list.
 // 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 
@@ -51,6 +50,8 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        col: null,
+        row: null,
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -65,9 +66,13 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+    const col = i % 3;
+    const row = (i - col) / 3;
     this.setState({
       history: history.concat([{
         squares: squares,
+        col: col,
+        row: row,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
@@ -86,12 +91,13 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const [winner, winningLine] = calculateWinner(current.squares);
 
-    const moves = history.map((_, move) => {
+    const moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
       return (
         <li key={move}>
+          ({step.col}, {step.row})
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
