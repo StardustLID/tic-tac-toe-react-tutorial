@@ -7,7 +7,6 @@ import './index.css';
 // 2. Bold the currently selected item in the move list.
 // 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 // 5. When someone wins, highlight the three squares that caused the win.
-// 6. When no one wins, display a message about the result being a draw.
 
 function Square(props) {
   return (
@@ -95,12 +94,15 @@ class Game extends React.Component {
         </li>
       );
     });
+// 6. When no one wins, display a message about the result being a draw.
 
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      // draw if (1) all squares are filled; AND (2) there is no winner
+      if (current.squares.every(x => x) && !winner) status = 'Draw';
+      else status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
     return (
